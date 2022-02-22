@@ -1,15 +1,19 @@
-function currentdate(){
-    console.log('21')
+function printdate(){
+    let today = new Date();
+    let date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+    console.log('current date ',date);
 }
 
-function currentmonth(){
-    console.log('Feb')
+function printmonth(){
+    let today = new Date();
+    let month = today.getMonth()+1
+    console.log('current month ',month);
 }
 
-function details(){
-    console.log('Thorium W3D1')
+function getbatchinfo(){
+    console.log('Thorium W3D1, todays topic is nodejs module system')
 }
 
-module.exports.currentdate = currentdate;
-module.exports.currentmonth= currentmonth;
-module.exports.details= details;
+module.exports.printdate = printdate;
+module.exports.printmonth = printmonth;
+module.exports.getbatchinfo = getbatchinfo;
