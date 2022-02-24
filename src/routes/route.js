@@ -28,7 +28,7 @@ router.get('/movies/:indexNumberld', function(req, res) {
         res.send(movies[value])
     }
 
-});
+})
 
 //4.Create an API GET /films
 router.get('/films', function(req, res){
@@ -50,12 +50,43 @@ let array = [ {
    }]
 
 res.send(array)
-});
+})
 
 // 5.
-// router.get(/films/:filmsld)
+router.get('/films/:filmsld', function (req, res){
+let value = req.params.filmsld    
+let array1 = [{
+    id: 1,
+    name: 'The Shining'
+   }, 
+   {
+    id: 2,
+    name: 'Incendies'
+   }, 
+   {
+    id: 3,
+    name: 'Rang de Basanti'
+   }, 
+   {
+    id: 4,
+    name: 'Finding Demo'
+   }]
+for(i=0;i<=array1.length;i++)
+{
+    if(array1[i].id===value)
+    {
+        res.send(array1[i]);
+    
+    } 
+    else
+    {
+        res.send('no movie is exits with id')
+    }
+}
 
 
+
+});
 
 
 
