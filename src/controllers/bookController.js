@@ -12,21 +12,25 @@ const getBookList = async function(req, res){
 }
 
 const getBooksInYear = async function(req, res){
-    let listOfBooks= await bookModel.find({year:2021})
+    let listOfBooks= await bookModel.find({year:{$eq:2021}})
     res.send({yearlist:listOfBooks})
-
 }
 
 const getXINRBooks = async function(req,res){
-    let inrprice = await bookModel.find({"price.indianPrice":{$in:[100,200,500]}})
+    let inrprice = await bookModel.find({indianPrice:{$in:[100,200,500]}})
     res.send({inrbooks:inrprice})
 }
 
 const getRandomBooks = async function(req,res){
-    let randonBook = await bookModel.find({$or:[{stackAvailable:true},{totalPages:{$gt:500}}]})
+    let randonBook = await bookModel.find({$or:[{stackAvailable:true,totalPages:{$eq:500}}]})
     res.send({randombooklist:randonBook})
 }
 
+const getPerticulars = async function(req, res){
+    let newdata = req.body;
+    let perticulars= await bookModel.find(newdata)
+    res.send({msg:perticulars})
+}
 
 
 
@@ -35,3 +39,4 @@ module.exports.getBookList=getBookList;
 module.exports.getBooksInYear=getBooksInYear;
 module.exports.getXINRBooks=getXINRBooks;
 module.exports.getRandomBooks=getRandomBooks;
+module.exports.getPerticulars=getPerticulars;
