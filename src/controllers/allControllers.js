@@ -54,9 +54,23 @@ const getBooks = async function(req,res){
     res.send({msg:allbooks})
 }
 
+//5.condition
+const updateKeys =async function(req,res){
 
+let book = await publisherModel.find({name:{$in:["Penguin","HarperCollins"]}}).select({_id:1})
+// console.log(book)
+let ispublisher = await bookModel.updateMany({publisher:{$in:book}},{isHardCover:"true"})
+console.log(ispublisher)
+res.send({updatedbooks:ispublisher})
+
+let updatePrice = await bookModel.updateMany({ratings:{$gt:"3"}},{$inc:{price:"10"}})
+console.log(updatePrice)
+res.send({isUpdated:updatePrice})
+
+}
 
 module.exports.createAuthor=createAuthor;
 module.exports.createPublisher=createPublisher;
 module.exports.createBook=createBook;
 module.exports.getBooks=getBooks;
+module.exports.updateKeys=updateKeys;
