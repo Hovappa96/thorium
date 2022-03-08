@@ -19,21 +19,9 @@ mongoose.connect("mongodb+srv://Hovappa96:Ew1mml9DEx33EJGg@cluster0.8bhyj.mongod
 
 
 
-const middleWare = function(req,res,next){
-    let data = req.body.isFreeAppUser
-    if(!isFreeAppUser in data){
-    res.send("the request is missing a mandatory header")
-    }
-next()
-}
 
 
 
-
-
-
-
-app.use(middleWare)
 app.use('/', route);
 
 
