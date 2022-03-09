@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
+const tokenverifty = require("../middleware/auth")
 
 
 //1.api
@@ -28,12 +29,13 @@ const userLogin = async function (req,res){
 const getUserDetails = async function(req,res){
   let token = req.headers["x-Auth-token"];
   if (!token) token = req.headers["x-auth-token"];
+  // console.log(token);
   if (!token) return res.send({ status: false, msg: "token must be present" });
-  console.log(token);
+  // console.log(token);
 
 
 
-  let decodedToken = jwt.verify(token, "functionup-thorium");
+  let decodedToken = jwt.verify(token, "Trainee at FunctionUp");
   if (!decodedToken)
     return res.send({ status: false, msg: "token is invalid" });
 
@@ -58,7 +60,8 @@ const updatedata = async function(req,res){
   }
   
   //updating data
-  let datas = await userModel.findOneAndUpdate({_id:updates},{mobile:"9731243422"},{new:true})
+  let data1 = req.body;
+  let datas = await userModel.findOneAndUpdate({_id:updates},{$set:{mobile:data1}},{upsert:true, new:true})
   res.send({status:true,updated:datas})
 }
 
