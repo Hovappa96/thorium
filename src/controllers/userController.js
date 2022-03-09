@@ -37,11 +37,18 @@ const getUser = async function(req,res){
 
 
 // 4.api
-const updateUser = async function(req,res){
+const updatePosts = async function(req,res){
   let getData =req.params.userId;
-  let data3 = req.body; 
-  let updateddData = await userModel.findOneAndUpdate({_id:getData},{$set:data3},{upsert:true,new:true}) 
-  res.send({status:true,updated:updateddData})
+  let data3 = req.body.message;
+
+  let getData3 = await userModel.findById(getData)
+  if(!getData3){
+    res.send("no such user is present")
+  }
+  isUpdate = getData3.posts;
+  isUpdate.push(data3)
+  let updatedPosts = await userModel.findOneAndUpdate({_id:getData},{posts:isUpdate},{upsert:true,new:true}) 
+  res.send({status:true,updated:updatedPosts})
 }
 
 
@@ -56,5 +63,5 @@ const deleteUser = async function(req,res){
 module.exports.createUser=createUser;
 module.exports.createLogin=createLogin;
 module.exports.getUser=getUser;
-module.exports.updateUser=updateUser;
+module.exports.updatePosts=updatePosts;
 module.exports.deleteUser=deleteUser;

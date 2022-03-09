@@ -14,8 +14,9 @@ const userSchema = new mongoose.Schema({
         enum:["male","female","others"]
     },
 	isDeleted: Boolean,default:false, //default value is false 
-    age : Number
+    age : Number,
+    posts:{type:[],default:[]}
 },{timestamps:true})
 
 
-module.exports=mongoose.model("User3",userSchema)
+module.exports=mongoose.model("User4",userSchema)

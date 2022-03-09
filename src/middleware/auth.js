@@ -29,7 +29,7 @@ const authorisation = function(req,res,next){
     console.log(getData)
     if(data1 != getData)
     {
-        res.send('userId is not matching to proceed')
+        res.send('logged in userId and requested UserId does not Matched')
     }
 
 next()
