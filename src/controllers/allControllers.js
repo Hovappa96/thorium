@@ -68,7 +68,39 @@ const fetchbook = async function (req, res) {
         res.status(500).send({ status: false, msg: err.message })
     }
 }
+
+
+const updateData = async function (req, res) {
+    try {
+        let search = await publisherModel.find({ publisher: { $in: ['Penguin', 'HarperCollins'] } }).select({ _id: 1 })
+        let dataUpdate = await bookModel.updateMany({ publisher: search }, { isHardCover: true }, { new: true })
+        res.status(200).send({ status: true, msg: dataUpdate })
+    }
+    catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
+const incPrice = async function (req, res) {
+    try {
+        let pricedata = await bookModel.updateMany({ ratings: { $gt: 3 } }, { $inc: { price: '10' } }, { new: true })
+        res.status(200).send({ status: false, msg: pricedata })
+    }
+
+    catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
+
+
+
+
+
+
 module.exports.createAuthor = createAuthor;
 module.exports.createPublisher = createPublisher;
 module.exports.createBook = createBook;
-module.exports.fetchbook= fetchbook;
+module.exports.fetchbook = fetchbook;
+module.exports.updateData = updateData;
+module.exports.incPrice = incPrice;
