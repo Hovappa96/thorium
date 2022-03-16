@@ -1,22 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const authorContoller = require("../controllers/authorController");
+const blogControllers = require("../controllers/blogControllers");
+const authentication = require("../middleWare/auth");
+const authoriZation = require("../middleWare/auth");
 
-const allControllers = require("../controllers/allControllers")
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+router.post("/authors", authorContoller.createAuthor);
 
-router.post("/createAuthor", allControllers.createAuthor);
+router.post("/authorLogIn", blogControllers.authorLogIn);
 
-router.post("/createPublisher", allControllers.createPublisher)
+router.post("/blogs", authentication.authentication, authoriZation.authorization, blogControllers.createBlog);
 
-router.post("/createBook", allControllers.createBook)
+router.get("/getblog", authentication.authentication, authoriZation.authorization, blogControllers.getBlogs);
 
-router.get("/fetchbook", allControllers.fetchbook)
+router.put("/updateBlogs/:blogId", authentication.authentication, authoriZation.authorization, blogControllers.updateBlogs);
 
-router.put("/updateData", allControllers.updateData)
+router.delete("/deleteBlogs/:blogId", authentication.authentication, authoriZation.authorization, blogControllers.deleteBlogs);
 
-router.put("/incPrice", allControllers.incPrice)
+router.delete("/deleteByQuery", authentication.authentication, authoriZation.authorization, blogControllers.deleteByQuery);
+
+
+
 
 module.exports = router;

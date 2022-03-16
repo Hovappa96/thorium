@@ -17,18 +17,6 @@ mongoose.connect("mongodb+srv://Hovappa96:Ew1mml9DEx33EJGg@cluster0.8bhyj.mongod
 
 
 
-const middleWare = function(req,res){
-    // let date = new Date()
-    let date = moment().format("YYYY-MM-DD hh:mm:ss")
-    let iPaddress = req.ip
-    let url = req.originalUrl;
-
-    console.log(date+' '+iPaddress+' '+url)
-}
-
-
-app.use(middleWare)
-
 app.use('/', route);
 
 
