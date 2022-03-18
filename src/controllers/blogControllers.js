@@ -25,9 +25,12 @@ const createBlog = async function (req, res) {
     try {
         let data = req.body;
         let data1 = req.body.authorId;
+        if (!data1) {
+            res.status(400).send({ status: false, msg: "AuthorId is Required" })
+        }
         let savedata = await authorModel.findById(data1);
         if (!savedata) {
-            return res.status(400).send({ status: false, msg: 'No such Author is Present On tha AuthorId' });
+            return res.status(404).send({ status: false, msg: 'No such Author is Present with this AuthorId' });
         } else {
             let savedata1 = await blogsModel.create(data);
             return res.status(201).send({ status: true, data: savedata1 });
@@ -43,23 +46,22 @@ const createBlog = async function (req, res) {
 
 const getBlogs = async function (req, res) {
     try {
-        let collection = await blogsModel.find({ isPublished: true, isDeleted: false });
-        // res.status(200).send({ status: true, msg: collection })
-
-        if (!collection) {
-            res.status(404).send({ status: false, msg: "Blogs Not Found" });
+        data = req.query;
+        data1 = {
+            isDeleted: false,
+            isPublished: false
         }
-        else {
-            let data = req.query;
-            let getByQuery = await blogsModel.find(data);
-            if (getByQuery.length <= 0) {
-                res.status(404).send({ status: false, msg: 'Data Not Found' });
-            }
-            else {
-                res.status(200).send({ status: true, data: getByQuery });
-            }
+        let data2 = Object.assign(data, data1)
+        console.log(data2)
+        let getByQuery = await blogsModel.find(data2)
+
+        if (getByQuery.length <= 0) {
+            return res.status(404).send({ status: false, msg: 'Data Not Found' });
+        } else {
+            res.status(200).send({ status: true, data: getByQuery })
         }
     }
+
 
     catch (error) {
         res.status(500).send({ status: false, error: error.message });
@@ -72,18 +74,15 @@ const getBlogs = async function (req, res) {
 const updateBlogs = async function (req, res) {
     try {
         let data1 = req.params.blogId;
-        if (Object.keys(data1).length == 0) {
-            res.status(400).send({ status: false, msg: "BlogsId Required" });
-        }
-        let findBlogId = await blogsModel.findOne({ data1 });
-        console.log(findBlogId)
-        // res.send(findBlogId)
+        let findBlogId = await blogsModel.findOne({ data1 })
+        console.log(data1)
         if (!findBlogId) {
             res.status(404).send({ status: false, msg: 'Blog Not Found' });
         }
         else {
             let data = req.body;
-            let savedata = await blogsModel.findOneAndUpdate({ authorId: data1 }, { $set: data }, { new: true })
+            let savedata = await blogsModel.findOneAndUpdate({ authorId: data1, isDeleted: false }, { $set: data }, { new: true })
+            console.log(savedata)
             savedata.isPublished = true
             savedata.publishedAt = Date();
             savedata.save()
@@ -101,20 +100,19 @@ const updateBlogs = async function (req, res) {
 const deleteBlogs = async function (req, res) {
     try {
         let data1 = req.params.blogId;
-
         if (Object.keys(data1).length == 0) {
             res.status(400).send({ status: false, msg: "BlogsId Required" });
         }
 
-        let savedata = await blogsModel.findOne({ data1 })
+        let savedata = await blogsModel.findOne({ authorId: data1, isDeleted: true })
+
         if (!savedata) {
-            return res.status(404).send({ status: false, msg: "No Such Data Found On That Id" });
-        }
-        else {
+            let deleteData = await blogsModel.findOneAndUpdate({ authorId: data1, isDeleted: false }, { isDeleted: true, deletedAt: Date() }, { new: true })
 
-            let deleteData = await blogsModel.updateMany({ authorId: data1 }, { isDeleted: true, deletedAt: Date() }, { new: true })
+            return res.status(201).send({ status: true, msg: "successfully deleted" });
+        } else {
+            return res.status(404).send({ status: false, msg: "Blog is already deleted" });
 
-            res.status(201).send({ status: true, data: deleteData });
         }
     }
     catch (err) {
