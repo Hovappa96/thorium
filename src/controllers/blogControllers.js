@@ -37,7 +37,7 @@ const getBlogs = async function (req, res) {
             isPublished: true
         }
         if (!data) {
-            res.status(200).send({ status: false, msg: "No parameter is passed" })
+            res.status(401).send({ status: false, msg: "No parameter is passed" })
         }
         let data2 = Object.assign(data, data1)
         console.log(data2)
@@ -81,12 +81,12 @@ const updateBlogs = async function (req, res) {
             }
 
             let data = req.body;
-            let findBlog = await blogsModel.findOneAndUpdate({ _id: data1, isDeleted: false }, { $set: data }, { new: true })
-            console.log(findBlog)
-            findBlog.isPublished = true
-            findBlog.publishedAt = Date();
-            findBlog.save()
-            return res.status(200).send({ status: true, data: findBlog });
+            let updateblogs = await blogsModel.findOneAndUpdate({ _id: data1, isDeleted: false }, { $set: data }, { new: true })
+            console.log(updateblogs)
+            updateblogs.isPublished = true
+            updateblogs.publishedAt = Date();
+            updateblogs.save()
+            return res.status(200).send({ status: true, data: updateblogs });
         }
     }
     catch (err) {
@@ -105,7 +105,6 @@ const deleteBlogs = async function (req, res) {
         }
 
         let findBlog = await blogsModel.findOne({ _id : data1, isDeleted: false })
-        // console.log(findBlog)
 
         if (findBlog) {
             let data2 = req.authorId;
@@ -138,26 +137,26 @@ const deleteBlogs = async function (req, res) {
 const deleteByQuery = async function (req, res) {
     try {
         const data = req.query;
-        const data2 = req.authorId;
+        let data2 = req.authorId;
+        console.log(data2)
 
         if (!data) {
             return res.status(400).send({ status: false, msg: "Enter Valid Valid Input" })
         }
 
-        let Blog = await blogsModel.find(data)
-        if (!Blog) {
+        let checkblog = await blogsModel.find({data})
+        console.log(checkblog)
+        if (!checkblog) {
             return res.status(400).send({ status: false, msg: "blog not found" })
         }
 
-        let idOfBlog = Blog.map(blogs => {
-            if (blogs.authorId.toString() === data2)
-                return blogs._id
+        let idOfBlog = checkblog.map(blogs => {
+        if (blogs.authorId.toString() === data2) return blogs._id;
         })
-        console.log(idOfBlog)
 
         const dataforUpdation = { isDeleted: true, deletedAt: Date.now() }
 
-        const result = await blogsModel.updateMany({ _id: idOfBlog }, dataforUpdation, { new: true })
+        const result = await blogsModel.updateMany({ _id:idOfBlog }, dataforUpdation, { new: true })
 
         if (!result) res.status(404).send({ status: false, msg: "No Data Found" })
 
