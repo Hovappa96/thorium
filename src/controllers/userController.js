@@ -1,7 +1,5 @@
 const userModel = require("../models/userModel")
 const jwt = require("jsonwebtoken")
-const authentication = require("../middleware/auth")
-const authorisation =  require("../middleware/auth")
 
 
 //1.api
@@ -60,8 +58,4 @@ const deleteUser = async function(req,res){
 }
 
 
-module.exports.createUser=createUser;
-module.exports.createLogin=createLogin;
-module.exports.getUser=getUser;
-module.exports.updatePosts=updatePosts;
-module.exports.deleteUser=deleteUser;
+module.exports = {createUser,createLogin,getUser,updatePosts,deleteUser}
